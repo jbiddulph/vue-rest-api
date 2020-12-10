@@ -9,16 +9,13 @@ export default {
             return state.token !== null
         }
     },
-    mutations: {
-      registerRetrieveToken(state, token){
-        state.token = token
-      },  
+    mutations: {  
       retrieveToken(state, token){
-            state.token = token
-        },
-        destroyToken(state) {
-            state.token = null
-        }
+          state.token = token
+      },
+      destroyToken(state) {
+          state.token = null
+      }
     },
     actions: {
         destroyToken(context) {
@@ -39,11 +36,22 @@ export default {
                 })        
             }
         },
-        loadCustomers(context) {
+        loadCustomers(context, credentials) {
           return new Promise((_resolve, _reject) => {
-              axios.get('http://laravel-rest-api-jwt-auth.test/api/customers', {token: context.state.token})
+              axios.get('http://laravel-rest-api-jwt-auth.test/api/customers', {
+                // token: localStorage.getItem('access_token')
+                 token: credentials.token
+              }, {
+                headers: {
+                  'Authorization': `Bearer: ${credentials.token}` 
+                }
+              })
             .then((response) => {
                 _resolve(response)
+                const token = response.data.token
+                  localStorage.setItem('access_token', token)
+                  context.commit('retrieveToken', token)
+                  _resolve(response)
               // this.msg = 'Login Successful'
               // this.msgClass = 'ui green message'
               // this.displayMessage = true
@@ -89,7 +97,7 @@ export default {
               .then((response) => {
                   const token = response.data.token
                   localStorage.setItem('access_token', token)
-                  context.commit('registerRetrieveToken', token)
+                  context.commit('retrieveToken', token)
                   _resolve(response)
                 // this.msg = 'Login Successful'
                 // this.msgClass = 'ui green message'

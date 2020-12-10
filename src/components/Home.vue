@@ -33,12 +33,18 @@ export default {
       displayMessage: false,
       msgClass: 'ui green message',
       msg: '',
-      token: this.$store.dispatch('retrieveToken')
+      token: localStorage.getItem('access_token')
     }
+  },
+  mounted() {
+    this.getCustomers(this.token)
   },
   methods: {
     getCustomers(token) {
-      this.$store.dispatch('loadCustomers', token)
+      this.$store.dispatch('loadCustomers', {
+        token
+      })
+      // this.$store.dispatch('loadCustomers', this.token)
       .then(response => {
         console.log('RES', response)
         this.$router.push({name: 'about'})
@@ -112,8 +118,8 @@ export default {
     }
   },
   created () {
-    console.log('this is the token:', this.data.token)
-    this.getCustomers(this.data.token)
+    // console.log('this is the token:', this.token)
+    // this.getCustomers(this.token)
     //hide message
     this.msg = ''
     this.msgClass = 'ui red message'

@@ -6,6 +6,7 @@
         <a href="#" class="header item">Vue JS ith CRUD API</a>
         <div class="right menu">
           <div><router-link to="/" class="item">Home</router-link></div>
+          <div><router-link to="/about" class="item">About</router-link></div>
           <div><router-link to="/home" class="item">Dashboard</router-link></div>
           <div v-if="!loggedIn"><router-link to="/login" class="item">Login</router-link></div>
           <div v-if="loggedIn"><router-link to="/logout" class="item">Logout</router-link></div>
