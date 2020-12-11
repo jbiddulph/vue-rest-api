@@ -47,7 +47,8 @@ export default {
       // this.$store.dispatch('loadCustomers', this.token)
       .then(response => {
         console.log('RES', response)
-        this.$router.push({name: 'about'})
+        localStorage.setItem('access_token', token)
+        // this.$router.push({name: 'home'})
       })
     },
     deleteCustomer(id) {

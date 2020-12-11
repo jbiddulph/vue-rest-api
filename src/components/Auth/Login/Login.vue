@@ -33,8 +33,8 @@ export default {
         password: data.password
       })
       .then(response => {
-        console.log('RES', response)
-        this.$router.push({name: 'about'})
+        console.log('loginRES', response)
+        this.$router.push({name: 'home'})
       })
       // this.loader = true
       // axios.post(this.url, {

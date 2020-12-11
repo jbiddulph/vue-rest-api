@@ -19,10 +19,14 @@ export default {
     },
     actions: {
         destroyToken(context) {
-            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
+            // axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
             if(context.getters.loggedIn) {
                 return new Promise((_resolve, _reject) => {
-                    axios.post('http://laravel-rest-api-jwt-auth.test/api/logout', {token: context.state.token})
+                    axios.post('http://laravel-rest-api-jwt-auth.test/api/logout', {
+                      headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+                      }
+                    })
                   .then((response) => {
                       localStorage.removeItem('access_token')
                       context.commit('destroyToken')
@@ -36,14 +40,11 @@ export default {
                 })        
             }
         },
-        loadCustomers(context, credentials) {
+        loadCustomers(context) {
           return new Promise((_resolve, _reject) => {
               axios.get('http://laravel-rest-api-jwt-auth.test/api/customers', {
-                // token: localStorage.getItem('access_token')
-                 token: credentials.token
-              }, {
                 headers: {
-                  'Authorization': `Bearer: ${credentials.token}` 
+                  'Authorization': 'Bearer ' + context.state.token
                 }
               })
             .then((response) => {
