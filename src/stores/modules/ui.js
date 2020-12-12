@@ -49,10 +49,6 @@ export default {
               })
             .then((response) => {
                 _resolve(response)
-                const token = response.data.token
-                  localStorage.setItem('access_token', token)
-                  context.commit('retrieveToken', token)
-                  _resolve(response)
               // this.msg = 'Login Successful'
               // this.msgClass = 'ui green message'
               // this.displayMessage = true

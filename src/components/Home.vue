@@ -46,8 +46,8 @@ export default {
       })
       // this.$store.dispatch('loadCustomers', this.token)
       .then(response => {
-        console.log('RES', response)
         localStorage.setItem('access_token', token)
+        this.customers = response.data
         // this.$router.push({name: 'home'})
       })
     },
