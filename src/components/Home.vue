@@ -37,7 +37,7 @@ export default {
     }
   },
   mounted() {
-    this.getCustomers(this.token)
+    this.getCustomers(localStorage.getItem('access_token'))
   },
   methods: {
     getCustomers(token) {
@@ -54,13 +54,18 @@ export default {
     deleteCustomer(id) {
       if(confirm("Do you really want to delete?")){
         this.loader = true
-        axios.delete(`${this.url}/${id}`)
+        axios.delete(`${this.url}/${id}`, {
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+        }
+      })
         .then(() => {
+          this.loader = false
           this.successfullyDeleted = true
           this.msg = 'Customer Deleted'
           this.msgClass = 'ui red message'
           this.displayMessage = true
-          this.getCustomers()
+          this.getCustomers(localStorage.getItem('access_token'))
         })
         .catch(e => {
           alert(e)
@@ -73,12 +78,17 @@ export default {
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
+      }, {
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+        }
       })
       .then(() => {
+        this.loader = false
         this.msg = 'New Customer Created'
         this.msgClass = 'ui green message'
         this.displayMessage = true
-        this.getCustomers()
+        this.getCustomers(localStorage.getItem('access_token'))
       })
       .catch(e => {
         alert(e)
@@ -90,11 +100,17 @@ export default {
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
+      }, {
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+        }
       }).then(() => {
+        this.loader = false
         this.msg = 'Customer Edited'
         this.msgClass = 'ui yellow message'
         this.displayMessage = true
-        this.getCustomers()
+        console.log('still go token: ', localStorage.getItem('access_token'))
+        this.getCustomers(localStorage.getItem('access_token'))
       }).catch((e) => {
         console.log('Error:', e)
       })

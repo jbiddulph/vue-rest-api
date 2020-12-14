@@ -24,7 +24,7 @@ export default {
                 return new Promise((_resolve, _reject) => {
                     axios.post('http://laravel-rest-api-jwt-auth.test/api/logout', {
                       headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+                        'Authorization': 'Bearer ' + context.state.token
                       }
                     })
                   .then((response) => {
@@ -60,7 +60,32 @@ export default {
               _reject(e)
             })
           })
-      },
+        },
+        // updateCustomer(context) {
+        //   return new Promise((_resolve, _reject) => {
+        //     axios.put(`http://laravel-rest-api-jwt-auth.test/api/customers/${context.id}`, {
+        //       first_name: context.first_name,
+        //       last_name: context.last_name,
+        //       email: context.email,
+        //     }, {
+        //       headers: {
+        //         'Authorization': 'Bearer ' + context.state.token
+        //       }
+        //     })
+        //     .then((response) => {
+        //         _resolve(response)
+        //         // this.loader = false
+        //         // this.msg = 'Customer Edited'
+        //         // this.msgClass = 'ui yellow message'
+        //         // this.displayMessage = true
+        //         // this.getCustomers()
+        //     })
+        //     .catch(e => {
+        //       alert(e)
+        //       _reject(e)
+        //     })
+        //   })
+        // },
         retrieveToken(context, credentials) {
             return new Promise((_resolve, _reject) => {
                 axios.post('http://laravel-rest-api-jwt-auth.test/api/login', {
@@ -93,7 +118,7 @@ export default {
               })
               .then((response) => {
                   const token = response.data.token
-                  localStorage.setItem('access_token', token)
+                  // localStorage.setItem('access_token', token)
                   context.commit('retrieveToken', token)
                   _resolve(response)
                 // this.msg = 'Login Successful'

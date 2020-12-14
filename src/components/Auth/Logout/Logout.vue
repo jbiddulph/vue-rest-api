@@ -15,8 +15,8 @@ export default {
     this.logout(this.jwtToken)
   },
   methods: {
-    logout(token) {
-        this.$store.dispatch('destroyToken', { token })
+    logout(jwtToken) {
+        this.$store.dispatch('destroyToken', { jwtToken })
     .then(response => {
         console.log('LOGOUTRES', response)
         this.$router.push({name: 'home'})

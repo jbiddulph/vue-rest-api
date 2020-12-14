@@ -23,7 +23,7 @@ const routes = [
     name: 'frontpage', 
     component: Frontpage,
     meta: {
-      requiresvisitor: true
+      requiresAuth: true
     }
   },
   { 
@@ -31,7 +31,7 @@ const routes = [
     name: 'home', 
     component: Home,
     meta: {
-      requiresvisitor: true
+      requiresAuth: true
     }
   },
   { 
@@ -39,7 +39,7 @@ const routes = [
     name: 'login', 
     component: Login,
     meta: {
-      requiresvisitor: true
+      requiresVisitor: true
     } 
   },
   { 
@@ -47,7 +47,7 @@ const routes = [
     name: 'register', 
     component: Register,
     meta: {
-      requiresvisitor: true
+      requiresVisitor: true
     } 
   },
   { path: '/logout', 
@@ -80,3 +80,29 @@ new Vue({
   router,
   store,
 }).$mount('#app')
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (!store.getters.loggedIn) {
+      next({
+        name: 'login',
+      })
+    } else {
+      next()
+    }
+  } else if (to.matched.some(record => record.meta.requiresVisitor)) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (store.getters.loggedIn) {
+      next({
+        name: 'home',
+      })
+    } else {
+      next()
+    }
+  } else {
+    next() // make sure to always call next()!
+  }
+})

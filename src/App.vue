@@ -9,6 +9,7 @@
           <div><router-link to="/about" class="item">About</router-link></div>
           <div><router-link to="/home" class="item">Dashboard</router-link></div>
           <div v-if="!loggedIn"><router-link to="/login" class="item">Login</router-link></div>
+          <div v-if="!loggedIn"><router-link to="/register" class="item">Register</router-link></div>
           <div v-if="loggedIn"><router-link to="/logout" class="item">Logout</router-link></div>
         </div>
       </div>
