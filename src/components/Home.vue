@@ -26,7 +26,6 @@ export default {
   },
   data() {
     return {
-      url: 'http://laravel-rest-api-jwt-auth.test/api/customers',
       customers: [],
       form: {first_name: '', last_name: '', email: '', isEdit: false},
       loader: false,
@@ -37,6 +36,7 @@ export default {
     }
   },
   mounted() {
+    console.log('URL: ' , this.getUrl)
     this.getCustomers(localStorage.getItem('access_token'))
   },
   methods: {
@@ -54,7 +54,7 @@ export default {
     deleteCustomer(id) {
       if(confirm("Do you really want to delete?")){
         this.loader = true
-        axios.delete(`${this.url}/${id}`, {
+        axios.delete(`${this.getUrl}customers/${id}`, {
         headers: {
           'Authorization': 'Bearer ' + localStorage.getItem('access_token')
         }
@@ -74,7 +74,7 @@ export default {
     },
     createCustomer(data) {
       this.loader = true
-      axios.post(this.url, {
+      axios.post(this.getUrl + 'customers', {
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
@@ -96,7 +96,7 @@ export default {
     },
     editCustomer(data) {
       this.loader = true
-      axios.put(`${this.url}/${data.id}`,{
+      axios.put(`${this.getUrl}customers/${data.id}`,{
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
@@ -141,6 +141,11 @@ export default {
     this.msg = ''
     this.msgClass = 'ui red message'
     this.displayMessage = false
+  },
+  computed: {
+    getUrl() {
+      return this.$store.getters.getUrl
+    }
   }
 }
 </script>

@@ -18,7 +18,7 @@ export default {
   name: 'Login',
     data() {
       return {
-        url: 'http://laravel-rest-api-jwt-auth.test/api/register',
+        url: 'http://movemeapi.test/api/register',
         form: {name: '', email: '', password: ''},
         loader: false,
         displayMessage: false,

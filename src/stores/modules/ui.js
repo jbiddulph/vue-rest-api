@@ -2,11 +2,15 @@ import axios from 'axios'
 
 export default {
     state: {
-        token: localStorage.getItem('access_token') || null
+        token: localStorage.getItem('access_token') || null,
+        url: "http://movemeapi.test/api/"
     },
     getters: {
         loggedIn(state) {
             return state.token !== null
+        },
+        getUrl(state) {
+          return state.url
         }
     },
     mutations: {  
@@ -22,7 +26,7 @@ export default {
             // axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
             if(context.getters.loggedIn) {
                 return new Promise((_resolve, _reject) => {
-                    axios.post('http://laravel-rest-api-jwt-auth.test/api/logout', {
+                    axios.post(context.state.url + 'logout', {
                       headers: {
                         'Authorization': 'Bearer ' + context.state.token
                       }
@@ -42,7 +46,7 @@ export default {
         },
         loadCustomers(context) {
           return new Promise((_resolve, _reject) => {
-              axios.get('http://laravel-rest-api-jwt-auth.test/api/customers', {
+              axios.get(context.state.url + 'customers', {
                 headers: {
                   'Authorization': 'Bearer ' + context.state.token
                 }
@@ -63,7 +67,7 @@ export default {
         },
         // updateCustomer(context) {
         //   return new Promise((_resolve, _reject) => {
-        //     axios.put(`http://laravel-rest-api-jwt-auth.test/api/customers/${context.id}`, {
+        //     axios.put(context.state.url + `customers/${context.id}`, {
         //       first_name: context.first_name,
         //       last_name: context.last_name,
         //       email: context.email,
@@ -88,7 +92,7 @@ export default {
         // },
         retrieveToken(context, credentials) {
             return new Promise((_resolve, _reject) => {
-                axios.post('http://laravel-rest-api-jwt-auth.test/api/login', {
+                axios.post(context.state.url + 'login', {
                 email: credentials.email,
                 password: credentials.password,
               })
@@ -111,7 +115,7 @@ export default {
         },
         registerRetrieveToken(context, credentials) {
             return new Promise((_resolve, _reject) => {
-                axios.post('http://laravel-rest-api-jwt-auth.test/api/register', {
+                axios.post(context.state.url + 'register', {
                 name: credentials.name,
                 email: credentials.email,
                 password: credentials.password,

@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      url: 'http://laravel-rest-api-jwt-auth.test/api/tasks',
+      url: 'http://movemeapi.test/api/tasks',
       tasks: [],
     //   form: {first_name: '', last_name: '', email: '', isEdit: false},
       loader: false,

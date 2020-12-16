@@ -27,6 +27,9 @@ export default {
   computed: {
     loggedIn() {
       return this.$store.getters.loggedIn
+    },
+    getUrl() {
+      return this.$store.getters.getUrl
     }
   }
 }
