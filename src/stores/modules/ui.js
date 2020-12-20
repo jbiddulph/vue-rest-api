@@ -3,7 +3,8 @@ import axios from 'axios'
 export default {
     state: {
         token: localStorage.getItem('access_token') || null,
-        url: "http://movemeapi.test/api/"
+        url: "http://movemeapi.test/api/",
+        baseurl: "http://movemeapi.test/"
     },
     getters: {
         loggedIn(state) {
@@ -11,6 +12,9 @@ export default {
         },
         getUrl(state) {
           return state.url
+        },
+        getBaseUrl(state) {
+          return state.baseurl
         }
     },
     mutations: {  
@@ -47,6 +51,27 @@ export default {
         loadCustomers(context) {
           return new Promise((_resolve, _reject) => {
               axios.get(context.state.url + 'customers', {
+                headers: {
+                  'Authorization': 'Bearer ' + context.state.token
+                }
+              })
+            .then((response) => {
+                _resolve(response)
+              // this.msg = 'Login Successful'
+              // this.msgClass = 'ui green message'
+              // this.displayMessage = true
+              // this.loader = false
+              // console.log('Logged inxx', data.data.token)
+            })
+            .catch(e => {
+              alert(e)
+              _reject(e)
+            })
+          })
+        },
+        loadVenues(context) {
+          return new Promise((_resolve, _reject) => {
+              axios.get(context.state.url + 'venue', {
                 headers: {
                   'Authorization': 'Bearer ' + context.state.token
                 }

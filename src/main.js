@@ -1,20 +1,22 @@
 import store from './stores/store'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import SuiVue from 'semantic-ui-vue';
 
 
 import App from './App.vue'
 import Frontpage from './components/Frontpage.vue'
-import Home from './components/Home.vue'
+import Customers from './components/Customer/Customers.vue'
 import Register from './components/Auth/Register/Register.vue'
 import Login from './components/Auth/Login/Login.vue'
 import Logout from './components/Auth/Logout/Logout.vue'
 import About from './components/about.vue'
 import MyTasks from './components/Tasks/MyTasks.vue'
+import Venues from './components/Admin/Venues.vue'
 
 
 Vue.use(VueRouter)
-
+Vue.use(SuiVue);
 Vue.config.productionTip = false
 
 const routes = [
@@ -27,9 +29,17 @@ const routes = [
     }
   },
   { 
-    path: '/home', 
+    path: '/dashboard', 
     name: 'home', 
-    component: Home,
+    component: Customers,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  { 
+    path: '/venues', 
+    name: 'venues', 
+    component: Venues,
     meta: {
       requiresAuth: true
     }

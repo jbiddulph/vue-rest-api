@@ -13,9 +13,9 @@
 
 <script>
 import axios from 'axios'
-import CreateCustomerForm from './Customer/CreateCustomerForm'
-import CustomerList from './Customer/CustomerList'
-import loader from './Loader'
+import CreateCustomerForm from '../Customer/CreateCustomerForm'
+import CustomerList from '../Customer/CustomerList'
+import loader from '../Loader'
 
 export default {
   name: 'Home',
@@ -41,11 +41,13 @@ export default {
   },
   methods: {
     getCustomers(token) {
+      this.loader = true
       this.$store.dispatch('loadCustomers', {
         token
       })
       // this.$store.dispatch('loadCustomers', this.token)
       .then(response => {
+        this.loader = false
         localStorage.setItem('access_token', token)
         this.customers = response.data
         // this.$router.push({name: 'home'})
