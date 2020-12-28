@@ -34,6 +34,10 @@ export default {
       })
       .then(response => {
         console.log('loginRES', response)
+        this.msg = 'Login Successful'
+        this.msgClass = 'ui green message'
+        this.displayMessage = true
+        this.loader = false
         this.$router.push({name: 'home'})
       })
       // this.loader = true

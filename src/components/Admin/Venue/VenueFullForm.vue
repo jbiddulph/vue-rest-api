@@ -167,7 +167,6 @@
                   :value="venue.is_live"
                   >
             </div>
-
             
             <div class="field column">
               <button :class="btnClass" @click="onFormSubmit">{{ btnName }}</button>
@@ -175,6 +174,7 @@
             
           </div>
         </div>
+        <div v-if="displayMessage" :class="msgClass">{{ this.msg }}</div>
     </form>
   </div>
 </template>
@@ -185,40 +185,38 @@ export default {
   data() {
     return {
       btnName: 'Save',
-      btnClass: 'ui primary button submit-button'
+      btnClass: 'ui primary button submit-button',
+      displayMessage: false,
+      msgClass: 'ui green message mb4',
+      msg: '',
     }
   },
   props: {
-    form: {
+    venue: {
       type: Object
-    },
-    venue: Object
-  },
-  mounted () {
-    this.form.isEdit = false
+    }
   },
   methods: {
     handleChange(event) {
       const { name, value } = event.target
-      let form = this.form
+      let form = this.venue
       form[name] = value
       this.form = form
     },
     onFormSubmit(event) {
       event.preventDefault()
-
+      this.displayMessage = false
+      this.msg = ""
       // form validation
       if(this.formValidation()){
-        console.log('FORMMM: ', this.form)
+
         //Submit the actual form
-        this.$emit('onFormSubmit', this.form)
+        this.$emit('onFormSubmit', this.venue)
 
         //change the button to SAVE
         this.btnName = "Save"
         this.btnClass = "ui primary button submit-button"
         
-        //clear the form fields
-        this.clearFormFields()
       }
     },
     formValidation() {
@@ -237,19 +235,9 @@ export default {
         alert('Enter Address')
         return false
       }
-
+      this.displayMessage = true
+      this.msg = "Venue Edited Successfully!"
       return true
-    },
-    clearFormFields() {
-      //clear form data
-      this.form.id = ""
-      this.form.venuename = ""
-      this.form.venuetype = ""
-      this.form.address = ""
-      this.form.isEdit = false
-      
-      //clear form fields
-      document.querySelector('.form').reset()
     }
   },
   updated() {    

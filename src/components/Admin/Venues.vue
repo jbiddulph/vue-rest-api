@@ -122,7 +122,6 @@ export default {
         this.msg = 'Venue Edited'
         this.msgClass = 'ui yellow message'
         this.displayMessage = true
-        console.log('still go token: ', localStorage.getItem('access_token'))
         this.getVenues(localStorage.getItem('access_token'))
       }).catch((e) => {
         console.log('Error:', e)
@@ -138,7 +137,6 @@ export default {
       this.displayMessage = false
     },
     toggle(data) {
-      console.log('DaTa:', data)
       this.form = data
       this.form.isEdit = true
       this.displayMessage = false

@@ -70,7 +70,7 @@ export default {
           this.getCustomers(localStorage.getItem('access_token'))
         })
         .catch(e => {
-          alert(e)
+          console.log(e)
         })
       }
     },

@@ -14,14 +14,16 @@
             <i class="edit icon ui blue" @click="onEdit()"></i>
             <sui-button class="mini ui green button" @click="toggle()">Show Modal</sui-button>
             <sui-modal v-model="open">
-            <sui-modal-header>{{venue.venuename}} in {{venue.town}}, {{venue.county}}</sui-modal-header>
+            <sui-modal-header>Edit Venue</sui-modal-header>
             <sui-modal-content scrolling image>
               <div class="ui">
                 <img class="ui small left floated image" :src=getBaseUrl+changeImgPath>
                 <sui-modal-description>
-                <sui-header>Default Profile Image</sui-header>
-                <p>Te eum doming eirmod, nominati pertinacia argumentum ad his. Ex eam alia facete scriptorem, est autem aliquip detraxit at. Usu ocurreret referrentur at, cu epicurei appellantur vix. Cum ea laoreet recteque electram, eos choro alterum definiebas in. Vim dolorum definiebas an. Mei ex natum rebum iisque.</p>
-                <p>Te eum doming eirmod, nominati pertinacia argumentum ad his. Ex eam alia facete scriptorem, est autem aliquip detraxit at. Usu ocurreret referrentur at, cu epicurei appellantur vix. Cum ea laoreet recteque electram, eos choro alterum definiebas in. Vim dolorum definiebas an. Mei ex natum rebum iisque.</p>
+                <sui-header>{{venue.venuename}} in {{venue.town}}, {{venue.county}}</sui-header>
+                <p>Make changes to this venue by editing the form below</p>
+                <br />
+                <br />
+                <br />
                 </sui-modal-description>
                 <VenueFullForm :venue="venue" @toggle="toggle" @onFormSubmit="onFormSubmit" />
               </div>
@@ -72,6 +74,20 @@ export default {
     }
   },
   methods: {
+    getVenues(token) {
+      this.LargeLoader = true
+      this.$store.dispatch('loadVenues', {
+        token
+      })
+      .then(response => {
+        this.LargeLoader = false
+        localStorage.setItem('access_token', token)
+        this.venues = response.data.data
+        // this.$router.push({name: 'home'})
+      }).catch((error) => {
+          this.error = JSON.stringify(error.message)
+      })
+    },
     toggle(data) {
       console.log('DaTa here is undefined:', data)
       this.form = data
@@ -95,7 +111,6 @@ export default {
       this.editVenue(data)
     },
     editVenue(data) {
-      console.log("Edit Datax: ", data)
       this.LargeLoader = true
       axios.put(`${this.getUrl}venue/${data.id}`,{
         id: data.id,
