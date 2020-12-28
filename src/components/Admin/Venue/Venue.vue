@@ -1,24 +1,31 @@
 <template> 
     <tr>
-        <td>{{venue.id}}
+        <td class="center">{{venue.id}}<br />
           <img :src=getBaseUrl+changeImgPath height="100" />
         </td>
-        <td>{{venue.venuename}} <small>{{venue.venuetype}}</small></td>
+        <td><h3>{{venue.venuename}}</h3>
+        {{venue.address}} <br />
+        <div v-if="venue.address2">{{venue.address2}} <br /></div>
+        {{venue.town}} <br />
+        {{venue.county}} <br />
+        <small>{{venue.venuetype}}</small></td>
         <td>{{venue.address}}</td>
         <td>
             <i class="edit icon ui blue" @click="onEdit()"></i>
-            <sui-button @click="toggle()">Show Modal</sui-button>
+            <sui-button class="mini ui green button" @click="toggle()">Show Modal</sui-button>
             <sui-modal v-model="open">
-            <sui-modal-header>{{venue.venuename}}</sui-modal-header>
+            <sui-modal-header>{{venue.venuename}} in {{venue.town}}, {{venue.county}}</sui-modal-header>
             <sui-modal-content scrolling image>
-                <sui-image
-                wrapped
-                size="medium"
-                :src=getBaseUrl+changeImgPath
-                />
+              <div class="ui">
+                <img class="ui small left floated image" :src=getBaseUrl+changeImgPath>
                 <sui-modal-description>
                 <sui-header>Default Profile Image</sui-header>
+                <p>Te eum doming eirmod, nominati pertinacia argumentum ad his. Ex eam alia facete scriptorem, est autem aliquip detraxit at. Usu ocurreret referrentur at, cu epicurei appellantur vix. Cum ea laoreet recteque electram, eos choro alterum definiebas in. Vim dolorum definiebas an. Mei ex natum rebum iisque.</p>
+                <p>Te eum doming eirmod, nominati pertinacia argumentum ad his. Ex eam alia facete scriptorem, est autem aliquip detraxit at. Usu ocurreret referrentur at, cu epicurei appellantur vix. Cum ea laoreet recteque electram, eos choro alterum definiebas in. Vim dolorum definiebas an. Mei ex natum rebum iisque.</p>
                 </sui-modal-description>
+                <VenueFullForm :venue="venue" @toggle="toggle" @onFormSubmit="onFormSubmit" />
+              </div>
+                
             </sui-modal-content>
             <sui-modal-actions>
                 <sui-button positive @click.native="toggle">
@@ -33,8 +40,14 @@
 </template>
 
 <script>
+import VenueFullForm from './VenueFullForm'
+import axios from 'axios'
+
 export default {
   name: 'Venue',
+  components: {
+    VenueFullForm
+  },
   props: {
       venue: {
           type: Object
@@ -42,24 +55,80 @@ export default {
   },
   data() {
     return {
-      open: false
+      venues: [],
+      open: false,
+      form: {
+        venuename: '', 
+        venuetype: '', 
+        address: '', 
+        isEdit: false
+      },
+      LargeLoader: false,
+      displayMessage: false,
+      msgClass: 'ui green message',
+      msg: '',
+      token: localStorage.getItem('access_token'),
+      error: null
     }
   },
   methods: {
-      toggle() {
-        this.open = !this.open;
-        this.$emit("toggle", this.venue)
-      },
-      scrollToTop() {
-        window.scrollTo(0,0);
-      },
-      onDelete() {
-        this.$emit("onDelete", this.venue.id)
-      },
-      onEdit() {
-        this.scrollToTop()
-        this.$emit("onEdit", this.venue)
-      }
+    toggle(data) {
+      console.log('DaTa here is undefined:', data)
+      this.form = data
+      this.open = !this.open;
+      this.isEdit = true
+      this.$emit("toggle", this.venue)
+      this.displayMessage = false
+    },
+    scrollToTop() {
+      window.scrollTo(0,0);
+    },
+    onDelete() {
+      this.$emit("onDelete", this.venue.id)
+    },
+    onEdit() {
+      this.scrollToTop()
+      this.$emit("onEdit", this.venue)
+    },
+    onFormSubmit(data) {
+      
+      this.editVenue(data)
+    },
+    editVenue(data) {
+      console.log("Edit Datax: ", data)
+      this.LargeLoader = true
+      axios.put(`${this.getUrl}venue/${data.id}`,{
+        id: data.id,
+        venuename: data.venuename,
+        venuetype: data.venuetype,
+        address: data.address,
+        address2: data.address2,
+        town: data.town,
+        county: data.county,
+        postcode: data.postcode,
+        postalsearch: data.postalsearch,
+        telephone: data.telephone,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        website: data.website,
+        photo: data.photo,
+        is_live: data.is_live
+      }, {
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+        }
+      }).then(() => {
+        this.LargeLoader = false
+        this.msg = 'Venue Edited'
+        this.msgClass = 'ui yellow message'
+        this.displayMessage = true
+        console.log('still go token: ', localStorage.getItem('access_token'))
+        this.getVenues(localStorage.getItem('access_token'))
+      }).catch((e) => {
+        console.log('Error:', e)
+      })
+      
+    },
   },
   computed: {
     getUrl() {

@@ -1,7 +1,7 @@
 <template>
   <div class="venue-list">
       <div class="data">
-          <table class="ui celled table">
+          <table class="ui celled striped table">
                <thead>
                    <tr>
                     <th style="width:50px; text-align:center">#</th>

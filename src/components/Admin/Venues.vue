@@ -1,8 +1,11 @@
 <template>
   <div class="hello">
     <div v-if="displayMessage" :class="msgClass">{{ this.msg }}</div>
+    <div v-if="error"><sui-message warning>
+      {{error}}
+    </sui-message></div>
     <VenueForm :form="form" @onFormSubmit="onFormSubmit" />
-    <LargeLoader v-if="loader" />
+    <LargeLoader v-if="LargeLoader" />
     <VenueList 
       :venues="venues" 
       @onDelete="onDelete" 
@@ -29,12 +32,18 @@ export default {
   data() {
     return {
       venues: [],
-      form: {venuename: '', venuetype: '', address: '', isEdit: false},
-      loader: false,
+      form: {
+        venuename: '', 
+        venuetype: '', 
+        address: '', 
+        isEdit: false
+      },
+      LargeLoader: false,
       displayMessage: false,
       msgClass: 'ui green message',
       msg: '',
-      token: localStorage.getItem('access_token')
+      token: localStorage.getItem('access_token'),
+      error: null
     }
   },
   mounted() {
@@ -42,27 +51,29 @@ export default {
   },
   methods: {
     getVenues(token) {
-      this.loader = true
+      this.LargeLoader = true
       this.$store.dispatch('loadVenues', {
         token
       })
       .then(response => {
-        this.loader = false
+        this.LargeLoader = false
         localStorage.setItem('access_token', token)
         this.venues = response.data.data
         // this.$router.push({name: 'home'})
+      }).catch((error) => {
+          this.error = JSON.stringify(error.message)
       })
     },
     deleteVenue(id) {
       if(confirm("Do you really want to delete?")){
-        this.loader = true
+        this.LargeLoader = true
         axios.delete(`${this.getUrl}venue/${id}`, {
         headers: {
           'Authorization': 'Bearer ' + localStorage.getItem('access_token')
         }
       })
         .then(() => {
-          this.loader = false
+          this.LargeLoader = false
           this.successfullyDeleted = true
           this.msg = 'Venue Deleted'
           this.msgClass = 'ui red message'
@@ -75,7 +86,7 @@ export default {
       }
     },
     createVenue(data) {
-      this.loader = true
+      this.LargeLoader = true
       axios.post(this.getUrl + 'venues', {
         venuename: data.venuename,
         venuetype: data.venuetype,
@@ -86,7 +97,7 @@ export default {
         }
       })
       .then(() => {
-        this.loader = false
+        this.LargeLoader = false
         this.msg = 'New Venue Created'
         this.msgClass = 'ui green message'
         this.displayMessage = true
@@ -97,7 +108,7 @@ export default {
       })
     },
     editVenue(data) {
-      this.loader = true
+      this.LargeLoader = true
       axios.put(`${this.getUrl}venue/${data.id}`,{
         venuename: data.venuename,
         venuetype: data.venuetype,
@@ -107,7 +118,7 @@ export default {
           'Authorization': 'Bearer ' + localStorage.getItem('access_token')
         }
       }).then(() => {
-        this.loader = false
+        this.LargeLoader = false
         this.msg = 'Venue Edited'
         this.msgClass = 'ui yellow message'
         this.displayMessage = true
@@ -127,7 +138,7 @@ export default {
       this.displayMessage = false
     },
     toggle(data) {
-      console.log('data: ', data)
+      console.log('DaTa:', data)
       this.form = data
       this.form.isEdit = true
       this.displayMessage = false

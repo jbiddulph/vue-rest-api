@@ -1,12 +1,7 @@
 <template lang="html">
-  <sui-segment>
     <sui-dimmer active inverted>
-      <sui-loader>Loading</sui-loader>
+      <sui-loader active centered inline />
     </sui-dimmer>
-    <br />
-    <br />
-    <br />
-  </sui-segment>
 </template>
 
 <script>
