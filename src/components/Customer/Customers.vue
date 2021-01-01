@@ -3,6 +3,9 @@
     <div v-if="displayMessage" :class="msgClass">{{ this.msg }}</div>
     <CreateCustomerForm :form="form" @onFormSubmit="onFormSubmit" />
     <loader v-if="loader" />
+    <div v-if="error"><sui-message warning>
+      {{error}}
+    </sui-message></div>
     <CustomerList 
       :customers="customers" 
       @onDelete="onDelete" 
@@ -32,7 +35,8 @@ export default {
       displayMessage: false,
       msgClass: 'ui green message',
       msg: '',
-      token: localStorage.getItem('access_token')
+      token: localStorage.getItem('access_token'),
+      error: null
     }
   },
   mounted() {
@@ -52,6 +56,10 @@ export default {
         this.customers = response.data
         // this.$router.push({name: 'home'})
       })
+      .catch((error) => {
+        this.error = JSON.stringify(error.message)
+        this.$router.push('login')
+      })
     },
     deleteCustomer(id) {
       if(confirm("Do you really want to delete?")){
@@ -69,8 +77,8 @@ export default {
           this.displayMessage = true
           this.getCustomers(localStorage.getItem('access_token'))
         })
-        .catch(e => {
-          console.log(e)
+        .catch((error) => {
+          this.error = JSON.stringify(error.message)
         })
       }
     },

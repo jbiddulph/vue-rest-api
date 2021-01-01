@@ -8,7 +8,9 @@
           <div><router-link to="/" class="item">Home</router-link></div>
           <div><router-link to="/about" class="item">About</router-link></div>
           <div><router-link to="/dashboard" class="item">Dashboard</router-link></div>
+          <div v-if="loggedIn"><router-link to="/events" class="item">Events</router-link></div>
           <div v-if="loggedIn"><router-link to="/venues" class="item">Venues</router-link></div>
+          <div v-if="loggedIn"><router-link to="/venues/create" class="item">Venue Create</router-link></div>
           <div v-if="!loggedIn"><router-link to="/login" class="item">Login</router-link></div>
           <div v-if="!loggedIn"><router-link to="/register" class="item">Register</router-link></div>
           <div v-if="loggedIn"><router-link to="/logout" class="item">Logout</router-link></div>

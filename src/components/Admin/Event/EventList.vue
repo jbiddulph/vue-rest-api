@@ -1,19 +1,20 @@
 <template>
-  <div class="venue-list">
+  <div class="event-list">
       <div class="data">
           <table class="ui celled striped table">
                <thead>
                    <tr>
                     <th style="width:50px; text-align:center">#</th>
                     <th>Name</th>
-                    <th>Address</th>
+                    <th>Type</th>
+                    <th>Date</th>
                     <th style="width:148px;">Action</th>
                    </tr>
                </thead>
                 <tbody>
-                    <Venue v-for="venue in venues" 
-                        :key="venue.id" 
-                        :venue="venue"
+                    <Event v-for="event in events" 
+                        :key="event.id" 
+                        :event="event"
                         @onDelete="onDelete"
                         @onEdit="onEdit"
                         @toggle="toggle"
@@ -25,24 +26,36 @@
 </template>
 
 <script>
-import Venue from './Venue'
+import Event from './Event'
+import axios from 'axios'
 export default {
-  name: 'VenueList',
+  name: 'EventList',
   components: {
-      Venue
+      Event
   },
   data() {
 		return {
 			// Our data object that holds the Laravel paginator data
-      Venues: {}
+      Events: {}
 		}
 	},
   props: {
-      venues: {
+      events: {
           type: Array
       }
   },
   methods: {
+      getResults(page = 1) {
+        axios.get(`${this.getUrl}eventlist?page=`+page, {
+          headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+          }
+        }).then(response => {
+          this.Events = response.data
+        }).catch((e) => {
+          console.log('Error:', e)
+        })
+      },
       onDelete (id) {
         this.$emit("onDelete", id)
       },

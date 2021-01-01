@@ -1,31 +1,31 @@
 <template> 
     <tr>
-        <td class="center">{{venue.id}}<br />
+        <td class="center">{{event.id}}<br />
           <img :src=getBaseUrl+changeImgPath height="100" />
         </td>
-        <td><h3>{{venue.venuename}}</h3>
-        {{venue.address}} <br />
-        <div v-if="venue.address2">{{venue.address2}} <br /></div>
-        {{venue.town}} <br />
-        {{venue.county}} <br />
-        <small>{{venue.venuetype}}</small></td>
-        <td>{{venue.address}}</td>
+        <td><h3>{{event.eventName}}</h3>
+        {{event.eventCost}} <br />
+        <div>{{event.eventDate}} <br />
+        {{event.eventTimeStart}} <br />
+        {{event.eventTimeEnd}} <br /></div>
+        <small>{{event.eventType}}</small></td>
+        <td>Venue: {{event.venue_id}}</td>
         <td>
             <i class="edit icon ui blue" @click="onEdit()"></i>
             <sui-button class="mini ui green button" @click="toggle()">Show Modal</sui-button>
             <sui-modal v-model="open">
-            <sui-modal-header>Edit Venue</sui-modal-header>
+            <sui-modal-header>Edit Event</sui-modal-header>
             <sui-modal-content scrolling image>
               <div class="ui">
                 <img class="ui small left floated image" :src=getBaseUrl+changeImgPath>
                 <sui-modal-description>
-                <sui-header>{{venue.venuename}} in {{venue.town}}, {{venue.county}}</sui-header>
-                <p>Make changes to this venue by editing the form below</p>
+                <sui-header>{{event.eventName}} Event Type: {{event.eventType}}, {{event.eventDate}}</sui-header>
+                <p>Make changes to this event by editing the form below</p>
                 <br />
                 <br />
                 <br />
                 </sui-modal-description>
-                <VenueFullForm :venue="venue" @toggle="toggle" @onFormSubmit="onFormSubmit" />
+                <EventFullForm :event="event" @toggle="toggle" @onFormSubmit="onFormSubmit" />
               </div>
                 
             </sui-modal-content>
@@ -42,27 +42,29 @@
 </template>
 
 <script>
-import VenueFullForm from './VenueFullForm'
+import EventFullForm from './EventFullForm'
 import axios from 'axios'
 
 export default {
-  name: 'Venue',
+  name: 'Event',
   components: {
-    VenueFullForm
+    EventFullForm
   },
   props: {
-      venue: {
+      event: {
           type: Object
       }
   },
   data() {
     return {
-      venues: [],
+      events: [],
       open: false,
       form: {
-        venuename: '', 
-        venuetype: '', 
-        address: '', 
+        eventName: '', 
+        eventType: '', 
+        eventDate: '',
+        eventTimeStart: '', 
+        eventTimeEnd: '', 
         isEdit: false
       },
       LargeLoader: false,
@@ -74,15 +76,15 @@ export default {
     }
   },
   methods: {
-    getVenues(token) {
+    getEvents(token) {
       this.LargeLoader = true
-      this.$store.dispatch('loadVenues', {
+      this.$store.dispatch('loadEvents', {
         token
       })
       .then(response => {
         this.LargeLoader = false
         localStorage.setItem('access_token', token)
-        this.venues = response.data.data
+        this.events = response.data.data
         // this.$router.push({name: 'home'})
       }).catch((error) => {
           this.error = JSON.stringify(error.message)
@@ -92,40 +94,33 @@ export default {
       this.form = data
       this.open = !this.open;
       this.isEdit = true
-      this.$emit("toggle", this.venue)
+      this.$emit("toggle", this.event)
       this.displayMessage = false
     },
     scrollToTop() {
       window.scrollTo(0,0);
     },
     onDelete() {
-      this.$emit("onDelete", this.venue.id)
+      this.$emit("onDelete", this.event.id)
     },
     onEdit() {
       this.scrollToTop()
-      this.$emit("onEdit", this.venue)
+      this.$emit("onEdit", this.event)
     },
     onFormSubmit(data) {
       
-      this.editVenue(data)
+      this.editEvent(data)
     },
-    editVenue(data) {
+    editEvent(data) {
       this.LargeLoader = true
-      axios.put(`${this.getUrl}venue/${data.id}`,{
+      axios.put(`${this.getUrl}eventlist/${data.id}`,{
         id: data.id,
-        venuename: data.venuename,
-        venuetype: data.venuetype,
-        address: data.address,
-        address2: data.address2,
-        town: data.town,
-        county: data.county,
-        postcode: data.postcode,
-        postalsearch: data.postalsearch,
-        telephone: data.telephone,
-        latitude: data.latitude,
-        longitude: data.longitude,
-        website: data.website,
-        photo: data.photo,
+        venue_id: data.venue_id,
+        eventName: data.eventName,
+        eventType: data.eventType,
+        eventDate: data.eventDate,
+        eventTimeStart: data.eventTimeEnd,
+        eventCost: data.eventCost,
         is_live: data.is_live
       }, {
         headers: {
@@ -133,11 +128,11 @@ export default {
         }
       }).then(() => {
         this.LargeLoader = false
-        this.msg = 'Venue Edited'
+        this.msg = 'Event Edited'
         this.msgClass = 'ui yellow message'
         this.displayMessage = true
         console.log('still go token: ', localStorage.getItem('access_token'))
-        this.getVenues(localStorage.getItem('access_token'))
+        this.getEvents(localStorage.getItem('access_token'))
       }).catch((e) => {
         console.log('Error:', e)
       })
@@ -152,7 +147,7 @@ export default {
       return this.$store.getters.getBaseUrl
     },
     changeImgPath() {
-      return this.venue.photo.replace(/^public\//, 'storage/')
+      return this.event.eventPhoto.replace(/^public\//, 'storage/')
     }
   }
 }

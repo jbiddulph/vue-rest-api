@@ -13,11 +13,14 @@ import Logout from './components/Auth/Logout/Logout.vue'
 import About from './components/about.vue'
 import MyTasks from './components/Tasks/MyTasks.vue'
 import Venues from './components/Admin/Venues.vue'
+import VenueCreate from './components/Admin/Venue/VenueCreate.vue'
+import Events from './components/Admin/Events.vue'
 
 
 Vue.use(VueRouter)
 Vue.use(SuiVue);
 Vue.config.productionTip = false
+Vue.component('pagination', require('laravel-vue-pagination'))
 
 const routes = [
   { 
@@ -40,6 +43,22 @@ const routes = [
     path: '/venues', 
     name: 'venues', 
     component: Venues,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  { 
+    path: '/venues/create', 
+    name: 'venuecreate', 
+    component: VenueCreate,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  { 
+    path: '/events', 
+    name: 'events', 
+    component: Events,
     meta: {
       requiresAuth: true
     }

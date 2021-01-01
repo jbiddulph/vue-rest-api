@@ -4,72 +4,38 @@
     <div v-if="error"><sui-message warning>
       {{error}}
     </sui-message></div>
-    <VenueForm :form="form" @onFormSubmit="onFormSubmit" />
+    <EventForm :form="form" @onFormSubmit="onFormSubmit" />
     <LargeLoader v-if="LargeLoader" />
-    <VenueList 
-      :venues="venues" 
+    <EventList 
+      :events="events" 
       @onDelete="onDelete" 
       @onEdit="onEdit"
       @toggle="toggle"
     />
-    <div class="all-venues">
-      <div v-for="venue in allVenues" :key="venue.id" class="venue">
-        <sui-card>
-          <sui-card-content>
-            <sui-image
-              src="static/images/avatar/small/elliot.jpg"
-              shape="circular"
-              size="mini"
-            />
-            {{venue.venuename}} <br />
-            {{venue.address}} <br />
-        <div v-if="venue.address2">{{venue.address2}} <br /></div>
-        {{venue.town}} <br />
-        {{venue.county}} <br />
-        <small>{{venue.venuetype}}</small>
-          </sui-card-content>
-           <!-- Image path -->
-          <!-- <img :src=imgpath height="100" />
-          <sui-image :src=imgpath /> -->
-          <sui-card-content>
-            <span slot="right"> <sui-icon name="heart outline" /> 17 likes </span>
-            <sui-icon name="comment" /> 3 comments
-          </sui-card-content>
-          <sui-card-content extra>
-            <sui-input
-              placeholder="Add Comment"
-              icon="heart outline"
-              icon-position="left"
-              transparent
-            />
-          </sui-card-content>
-        </sui-card>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import VenueForm from './Venue/VenueForm'
-import VenueList from './Venue/VenueList'
+import EventForm from './Event/EventForm'
+import EventList from './Event/EventList'
 import LargeLoader from '../LargeLoader'
-import { mapGetters, mapActions } from 'vuex' 
+
 
 export default {
-  name: 'Venues',
+  name: 'Events',
   components: {
-    VenueForm,
-    VenueList,
+    EventForm,
+    EventList,
     LargeLoader
   },
   data() {
     return {
-      venues: [],
+      events: [],
       form: {
-        venuename: '', 
-        venuetype: '', 
-        address: '', 
+        eventName: '', 
+        eventType: '', 
+        eventDate: '',
         isEdit: false
       },
       LargeLoader: false,
@@ -77,34 +43,32 @@ export default {
       msgClass: 'ui green message',
       msg: '',
       token: localStorage.getItem('access_token'),
-      error: null,
-      page: Number
+      error: null
     }
   },
   mounted() {
-    this.getVenues(localStorage.getItem('access_token'))
+    this.getEvents(localStorage.getItem('access_token'))
   },
   methods: {
-    ...mapActions(['fetchVenues']),
-    getVenues(token) {
+    getEvents(token) {
       this.LargeLoader = true
-      this.$store.dispatch('loadVenues', {
+      this.$store.dispatch('loadEvents', {
         token
       })
       .then(response => {
         this.LargeLoader = false
         localStorage.setItem('access_token', token)
-        this.venues = response.data.data
+        this.events = response.data.data
         // this.$router.push({name: 'home'})
       }).catch((error) => {
           this.error = JSON.stringify(error.message)
           this.router.push("login")
       })
     },
-    deleteVenue(id) {
+    deleteEvent(id) {
       if(confirm("Do you really want to delete?")){
         this.LargeLoader = true
-        axios.delete(`${this.getUrl}venue/${id}`, {
+        axios.delete(`${this.getUrl}eventlist/${id}`, {
         headers: {
           'Authorization': 'Bearer ' + localStorage.getItem('access_token')
         }
@@ -112,22 +76,25 @@ export default {
         .then(() => {
           this.LargeLoader = false
           this.successfullyDeleted = true
-          this.msg = 'Venue Deleted'
+          this.msg = 'Event Deleted'
           this.msgClass = 'ui red message'
           this.displayMessage = true
-          this.getVenues(localStorage.getItem('access_token'))
+          this.getEvents(localStorage.getItem('access_token'))
         })
         .catch(e => {
           alert(e)
         })
       }
     },
-    createVenue(data) {
+    createEvent(data) {
       this.LargeLoader = true
-      axios.post(this.getUrl + 'venues', {
-        venuename: data.venuename,
-        venuetype: data.venuetype,
-        address: data.address,
+      axios.post(this.getUrl + 'eventlist', {
+        venue_id: data.venue_id,
+        eventName: data.eventName,
+        eventType: data.eventType,
+        eventDate: data.eventDate,
+        eventTimeStart: data.eventTimeStart,
+        eventTimeEnd: data.eventTimeEnd,
       }, {
         headers: {
           'Authorization': 'Bearer ' + localStorage.getItem('access_token')
@@ -135,38 +102,41 @@ export default {
       })
       .then(() => {
         this.LargeLoader = false
-        this.msg = 'New Venue Created'
+        this.msg = 'New Event Created'
         this.msgClass = 'ui green message'
         this.displayMessage = true
-        this.getVenues(localStorage.getItem('access_token'))
+        this.getEvents(localStorage.getItem('access_token'))
       })
       .catch(e => {
         alert(e)
       })
     },
-    editVenue(data) {
+    editEvent(data) {
       this.LargeLoader = true
-      axios.put(`${this.getUrl}venue/${data.id}`,{
-        venuename: data.venuename,
-        venuetype: data.venuetype,
-        address: data.address,
+      axios.put(`${this.getUrl}eventlist/${data.id}`,{
+        venue_id: data.venue_id,
+        eventName: data.eventName,
+        eventType: data.eventType,
+        eventDate: data.eventDate,
+        eventTimeStart: data.eventTimeStart,
+        eventTimeEnd: data.eventTimeEnd,
       }, {
         headers: {
           'Authorization': 'Bearer ' + localStorage.getItem('access_token')
         }
       }).then(() => {
         this.LargeLoader = false
-        this.msg = 'Venue Edited'
+        this.msg = 'Event Edited'
         this.msgClass = 'ui yellow message'
         this.displayMessage = true
-        this.getVenues(localStorage.getItem('access_token'))
+        this.getEvents(localStorage.getItem('access_token'))
       }).catch((e) => {
         console.log('Error:', e)
       })
       
     },
     onDelete(id) {
-      this.deleteVenue(id)
+      this.deleteEvent(id)
     },
     onEdit(data) {
       this.form = data
@@ -180,11 +150,11 @@ export default {
     },
     onFormSubmit(data) {
       if (data.isEdit) {
-        // edit venue
-        this.editVenue(data)
+        // edit Event
+        this.editEvent(data)
       } else {
-        //create venue
-        this.createVenue(data)
+        //create event
+        this.createEvent(data)
       }
     }
   },
@@ -195,7 +165,6 @@ export default {
     this.msg = ''
     this.msgClass = 'ui red message'
     this.displayMessage = false
-    this.fetchVenues()
   },
   computed: {
     getUrl() {
@@ -203,10 +172,6 @@ export default {
     },
     loggedIn() {
       return this.$store.getters.loggedIn
-    },
-    ...mapGetters(['allVenues']),
-    getBaseUrl() {
-      return this.$store.getters.getBaseUrl
     }
   }
 }
@@ -236,10 +201,5 @@ thead tr th {
 }
 .ui.inverted.dimmer {
   background-color: rgba(255, 255, 255, 0)!important;
-}
-.all-venues {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 1rem;
 }
 </style>
