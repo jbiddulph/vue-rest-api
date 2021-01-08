@@ -23,6 +23,7 @@ const getters = {
 const mutations = {  
   setVenues: (state, venues) => ( state.venues = venues ),
   newVenues: (state, venue) => state.venues.unshift(venue),
+  removeVenue: (state, id) => state.venues = state.venues.filter(venue => venue.id !== id),
   retrieveToken(state, token){
       state.token = token
   },
@@ -40,29 +41,39 @@ const actions = {
       })
     commit('setVenues', response.data.data)
   },
-  async addVenue({commit}) {
+  async addVenue({commit}, venues) {
     const response = await axios.post(
       state.url + 'venue', {
-        venuename: this.venuename,
-        address: this.address,
-        address2: this.address2,
-        town: this.town,
-        county: this.county,
-        postcode: this.postcode,
-        postalsearch: this.postalsearch,
-        telephone: this.telephone,
-        latitude: this.latitude,
-        lngitude: this.longitude,
-        website: this.website,
-        venuetype: this.venuetype,
+        venuename: venues.venuename,
+        address: venues.address,
+        address2: venues.address2,
+        town: venues.town,
+        county: venues.county,
+        postcode: venues.postcode,
+        postalsearch: venues.postalsearch,
+        telephone: venues.telephone,
+        latitude: venues.latitude,
+        longitude: venues.longitude,
+        website: venues.website,
+        venuetype: venues.venuetype,
     },{
         headers: {
-          'Authorization': 'Bearer ' + state.token
+          'Authorization': 'Bearer ' + state.token,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         }
       })
-    commit('newVenue', response.data.data)
-
+    commit('newVenues', response.data.data)
   },
+  async deleteVenune({commit}, id) {
+    await axios.delete(state.url + `venue/${id}`, {
+      headers: {
+        'Authorization': 'Bearer ' + state.token
+      }
+    })
+    commit('removeVenue', id)
+  },
+  
   destroyToken(context) {
       // axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
       if(context.getters.loggedIn) {

@@ -6,6 +6,7 @@
     </sui-message></div>
     <VenueForm :form="form" @onFormSubmit="onFormSubmit" />
     <LargeLoader v-if="LargeLoader" />
+    <VenuesFilter /> 
     <VenueList 
       :venues="venues" 
       @onDelete="onDelete" 
@@ -27,6 +28,7 @@
         {{venue.town}} <br />
         {{venue.county}} <br />
         <small>{{venue.venuetype}}</small>
+        <i @click="deleteVenue(venue.id)" class="trash alternate icon"></i>
           </sui-card-content>
            <!-- Image path -->
           <!-- <img :src=imgpath height="100" />
@@ -53,6 +55,7 @@
 import axios from 'axios'
 import VenueForm from './Venue/VenueForm'
 import VenueList from './Venue/VenueList'
+import VenuesFilter from './Venue/VenuesFilter'
 import LargeLoader from '../LargeLoader'
 import { mapGetters, mapActions } from 'vuex' 
 
@@ -61,6 +64,7 @@ export default {
   components: {
     VenueForm,
     VenueList,
+    VenuesFilter,
     LargeLoader
   },
   data() {
@@ -85,7 +89,7 @@ export default {
     this.getVenues(localStorage.getItem('access_token'))
   },
   methods: {
-    ...mapActions(['fetchVenues']),
+    ...mapActions(['fetchVenues', 'deleteVenue']),
     getVenues(token) {
       this.LargeLoader = true
       this.$store.dispatch('loadVenues', {

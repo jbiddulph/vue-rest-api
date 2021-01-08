@@ -24,6 +24,7 @@
                     @change="handleChange"
                     :value="form.email"
                     >
+                  <small>timothy@timothy.com</small>
                 </div>
                 <div class="field">
                   <label>Password</label>
