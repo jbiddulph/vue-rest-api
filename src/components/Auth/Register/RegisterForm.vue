@@ -42,6 +42,15 @@
                     :value="form.password"
                     >
                 </div>
+                <div class="field">
+                  <label>Password Confirm</label>
+                  <input 
+                    type="password" 
+                    name="password_confirmation"
+                    @change="handleChange"
+                    :value="form.password_confirmation"
+                    >
+                </div>
                 <button class="ui primary labeled icon button" @click="onFormSubmit">
                   <i class="unlock alternate icon"></i>
                   Register
@@ -102,6 +111,11 @@ export default {
         alert('Enter Password')
         return false
       }
+      //password_confirmation
+      if(document.getElementsByName('password_confirmation')[0].value === "") {
+        alert('Enter Password')
+        return false
+      }
 
       return true
     },
@@ -110,6 +124,7 @@ export default {
       this.form.name = ""
       this.form.email = ""
       this.form.password = ""
+      this.form.password_confirmation = ""
       this.form.isEdit = false
       
       //clear form fields

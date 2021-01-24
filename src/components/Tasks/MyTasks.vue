@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      url: 'http://movemeapi.test/api/tasks',
+      url: 'http://choosapi.test/api/auth/tasks',
       tasks: [],
     //   form: {first_name: '', last_name: '', email: '', isEdit: false},
       loader: false,

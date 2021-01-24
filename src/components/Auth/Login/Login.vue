@@ -18,7 +18,7 @@ export default {
   name: 'Login',
     data() {
       return {
-        url: 'http://movemeapi.test/api/login',
+        url: 'http://choosapi.test/api/auth/login',
         form: {email: '', password: ''},
         loader: false,
         displayMessage: false,

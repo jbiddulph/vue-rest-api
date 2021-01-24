@@ -15,11 +15,11 @@ export default {
     RegisterForm,
     loader
   },
-  name: 'Login',
+  name: 'Register',
     data() {
       return {
-        url: 'http://movemeapi.test/api/register',
-        form: {name: '', email: '', password: ''},
+        url: 'http://choosapi.test/api/auth/register',
+        form: {name: '', email: '', password: '', password_confirmation: ''},
         loader: false,
         displayMessage: false,
         msgClass: 'ui green message',
@@ -31,7 +31,8 @@ export default {
       this.$store.dispatch('registerRetrieveToken', {
         name: data.name,
         email: data.email,
-        password: data.password
+        password: data.password,
+        password_confirmation: data.password_confirmation
       })
       .then(response => {
           console.log('Res: ', response)

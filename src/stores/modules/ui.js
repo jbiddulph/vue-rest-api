@@ -2,8 +2,8 @@ import axios from 'axios'
 
 const state = {
   token: localStorage.getItem('access_token') || null,
-  url: "http://movemeapi.test/api/",
-  baseurl: "http://movemeapi.test/",
+  url: "http://choosapi.test/api/auth/",
+  baseurl: "http://choosapi.test/",
   users: [],
   events: [],
   venues: []
@@ -203,17 +203,12 @@ const actions = {
           name: credentials.name,
           email: credentials.email,
           password: credentials.password,
+          password_confirmation: credentials.password_confirmation,
         })
         .then((response) => {
             const token = response.data.token
-            // localStorage.setItem('access_token', token)
             context.commit('retrieveToken', token)
             _resolve(response)
-          // this.msg = 'Login Successful'
-          // this.msgClass = 'ui green message'
-          // this.displayMessage = true
-          // this.loader = false
-          // console.log('Logged inxx', data.data.token)
         })
         .catch(e => {
           alert(e)
