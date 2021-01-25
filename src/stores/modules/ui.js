@@ -4,11 +4,13 @@ const state = {
   token: localStorage.getItem('access_token') || null,
   url: "http://choosapi.test/api/auth/",
   baseurl: "http://choosapi.test/",
-  users: [],
-  events: [],
-  venues: []
+  user: {}
 }
 const getters = {
+  //getUser: (state) => state.user,
+  getUser(state) {
+    return state.user
+  },
   loggedIn(state) {
       return state.token !== null
   },
@@ -20,7 +22,8 @@ const getters = {
   },
   allVenues: state => state.venues
 }
-const mutations = {  
+const mutations = { 
+  setUser: (state, user) => (state.user = user),
   setVenues: (state, venues) => ( state.venues = venues ),
   newVenues: (state, venue) => state.venues.unshift(venue),
   removeVenue: (state, id) => state.venues = state.venues.filter(venue => venue.id !== id),
@@ -32,6 +35,14 @@ const mutations = {
   }
 }
 const actions = {
+  async getProfile({commit}) {
+    const response = await axios.get(state.url + 'profile', {
+      headers: {
+        'Authorization': 'Bearer ' + state.token
+      }
+    })
+  commit('setUser', response.data)
+  },
   async fetchVenues({commit}) {
     const response = await axios.get(
       state.url + 'venue', {
@@ -84,6 +95,7 @@ const actions = {
                 }
               })
             .then((response) => {
+              console.log('logged in response: ', response)
                 localStorage.removeItem('access_token')
                 context.commit('destroyToken')
                 _resolve(response)

@@ -6,7 +6,6 @@ import SuiVue from 'semantic-ui-vue';
 
 import App from './App.vue'
 import Frontpage from './components/Frontpage.vue'
-import Customers from './components/Customer/Customers.vue'
 import Register from './components/Auth/Register/Register.vue'
 import Login from './components/Auth/Login/Login.vue'
 import Logout from './components/Auth/Logout/Logout.vue'
@@ -15,6 +14,7 @@ import MyTasks from './components/Tasks/MyTasks.vue'
 import Venues from './components/Admin/Venues.vue'
 import VenueCreate from './components/Admin/Venue/VenueCreate.vue'
 import Events from './components/Admin/Events.vue'
+import Todos from './components/Todos/todos.vue'
 
 
 Vue.use(VueRouter)
@@ -33,8 +33,8 @@ const routes = [
   },
   { 
     path: '/dashboard', 
-    name: 'home', 
-    component: Customers,
+    name: 'todos', 
+    component: Todos,
     meta: {
       requiresAuth: true
     }
@@ -127,7 +127,7 @@ router.beforeEach((to, from, next) => {
     // if not, redirect to login page.
     if (store.getters.loggedIn) {
       next({
-        name: 'home',
+        name: 'todos',
       })
     } else {
       next()

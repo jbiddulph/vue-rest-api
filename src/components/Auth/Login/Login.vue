@@ -28,11 +28,13 @@ export default {
     },
   methods: {
     loginUser(data) {
+      //const authUser = {}
       this.$store.dispatch('retrieveToken', {
         email: data.email,
         password: data.password
       })
       .then(response => {
+
         console.log('loginRES', response)
         this.msg = 'Login Successful'
         this.msgClass = 'ui green message'
