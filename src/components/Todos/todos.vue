@@ -3,8 +3,23 @@
         <AddTodo />
         <FilterTodos />
         <h3>Todos</h3>
+        <div class="legend">
+            <span>double click to mark complete</span>
+            <span>
+                <span class="incomplete-box">Incomplete</span>
+            </span>
+            <span>
+                <span class="complete-box">Complete</span>
+            </span>
+        </div>
         <div class="todos">
-            <div v-for="todo in allTodos" :key="todo.id" class="todo">
+            <div 
+                @dblclick="onDblClick(todo)" 
+                v-for="todo in allTodos" 
+                :key="todo.id" 
+                class="todo"
+                v-bind:class="{'is-complete':todo.completed}"
+                >
                 {{todo.title}}
                 {{todo.body}}
                 <i @click="deleteTodo(todo.id)" class="fas fa-trash-alt"></i>
@@ -24,7 +39,22 @@ export default {
     },
     name: 'Todos',
     methods: {
-        ...mapActions(['fetchTodos', 'getProfile', 'deleteTodo'])
+        ...mapActions([
+            'fetchTodos', 
+            'getProfile', 
+            'deleteTodo', 
+            'updateTodo'
+        ]),
+        onDblClick(todo) {
+            const updTodo = {
+                id: todo.id,
+                title: todo.title,
+                body: todo.body,
+                created_by: todo.created_by,
+                completed: !todo.completed,
+            }
+            this.updateTodo(updTodo)
+        }
     },
     computed: {
         ...mapGetters(['allTodos', 'getUser'])    
@@ -38,6 +68,27 @@ export default {
 </script>
 
 <style scoped>
+.legend {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+.incomplete-box {
+    display: inline-block;
+    width:10px;
+    height:10px;
+    background-color: #41b883;
+}
+.complete-box {
+    display: inline-block;
+    width:10px;
+    height:10px;
+    background-color: #35495e;
+}
+.is-complete {
+    background-color: #35495e!important;
+    color: #ffffff;
+}
 i {
     position: absolute;
     bottom: 10px;
@@ -59,5 +110,10 @@ i {
     position: relative;
     cursor: pointer;
 
+}
+@media (max-width: 500px) {
+    .todos {
+        grid-template-columns: 1fr;
+    }
 }
 </style>

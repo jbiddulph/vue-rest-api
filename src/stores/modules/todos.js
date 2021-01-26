@@ -17,7 +17,7 @@ const actions = {
         })
         commit('SET_TODOS', response.data)
     },
-    async addTodo({ commit }, todo){
+    async addTodo({ commit }, todo) {
         const response = await axios.post('http://choosapi.test/api/todos', 
             todo, {
             headers: {
@@ -44,6 +44,15 @@ const actions = {
             }
         })
         commit('SET_TODOS', response.data)
+    },
+    async updateTodo({ commit }, updTodo) {
+        const response = await axios.put(`http://choosapi.test/api/todos/${updTodo.id}`, updTodo, {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+            }
+        })
+        console.log(response.data)
+        commit('UPDATE_TODO', response.data)
     }
 }
 
@@ -52,6 +61,12 @@ const mutations = {
     NEW_TODO: (state, todo) => state.todos.unshift(todo),
     REMOVE_TODO: (state, id) => 
         state.todos = state.todos.filter(todo => todo.id !== id),
+    UPDATE_TODO: (state, updTodo) => {
+        const index = state.todos.findIndex(todo => todo.id === updTodo.id)
+        if(index !== -1) {
+            state.todos.splice(index, 1, updTodo)
+        }
+    }
 }
 
 export default {
