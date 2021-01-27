@@ -38,7 +38,7 @@ const actions = {
     async filterTodos({ commit }, e) {
         // get selected number
         const limit = parseInt(e.target.options[e.target.options.selectedIndex].innerText)
-        const response = await axios.get(`http://choosapi.test/api/todos?_limit=${limit}`, {
+        const response = await axios.get(`http://choosapi.test/api/todos?limit=${limit}`, {
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('access_token')
             }

@@ -15,6 +15,7 @@ import Venues from './components/Admin/Venues.vue'
 import VenueCreate from './components/Admin/Venue/VenueCreate.vue'
 import Events from './components/Admin/Events.vue'
 import Todos from './components/Todos/todos.vue'
+import NotFound from './components/ui/NotFound.vue'
 
 
 Vue.use(VueRouter)
@@ -97,7 +98,11 @@ const routes = [
     meta: {
       requiresvisitor: true
     }  
-  }
+  },
+  {
+    path: "/:catchAll(.*)",
+    component: NotFound,
+  },
 ]
 
 const router = new VueRouter({

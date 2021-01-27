@@ -5,6 +5,31 @@
       <div class="ui container">
         <a href="#" class="header item">Vue JS ith CRUD API</a>
         <div class="right menu">
+          <div>
+            <sui-dropdown text="File">
+              <sui-dropdown-menu>
+                <sui-dropdown-item>New</sui-dropdown-item>
+                <sui-dropdown-item
+                  >Open... <span class="description">ctrl + o</span></sui-dropdown-item
+                >
+                <sui-dropdown-item
+                  >Save as... <span class="description">ctrl + s</span></sui-dropdown-item
+                >
+                <sui-dropdown-item
+                  >Rename <span class="description">ctrl + r</span></sui-dropdown-item
+                >
+                <sui-dropdown-item>Make a copy</sui-dropdown-item>
+                <sui-dropdown-item
+                  ><sui-icon name="folder" />Move to folder</sui-dropdown-item
+                >
+                <sui-dropdown-item
+                  ><sui-icon name="trash" />Move to trash</sui-dropdown-item
+                >
+                <sui-dropdown-divider />
+                <sui-dropdown-item>Download as...</sui-dropdown-item>
+              </sui-dropdown-menu>
+            </sui-dropdown>
+          </div>
           <div><router-link to="/" class="item">Home</router-link></div>
           <div><router-link to="/about" class="item">About</router-link></div>
           <!-- <div><router-link to="/dashboard" class="item">Dashboard</router-link></div> -->
