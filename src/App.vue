@@ -34,6 +34,7 @@
           <div><router-link to="/about" class="item">About</router-link></div>
           <!-- <div><router-link to="/dashboard" class="item">Dashboard</router-link></div> -->
           <div v-if="loggedIn"><router-link to="/dashboard" class="item">Todos</router-link></div>
+          <div v-if="loggedIn"><router-link to="/artwork" class="item">Artwork</router-link></div>
           <!-- <div v-if="loggedIn"><router-link to="/events" class="item">Events</router-link></div>
           <div v-if="loggedIn"><router-link to="/venues" class="item">Venues</router-link></div>
           <div v-if="loggedIn"><router-link to="/venues/create" class="item">Venue Create</router-link></div> -->

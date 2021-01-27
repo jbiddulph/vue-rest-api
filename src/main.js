@@ -15,6 +15,7 @@ import Venues from './components/Admin/Venues.vue'
 import VenueCreate from './components/Admin/Venue/VenueCreate.vue'
 import Events from './components/Admin/Events.vue'
 import Todos from './components/Todos/todos.vue'
+import Artworks from './components/Artworks/artworks.vue'
 import NotFound from './components/ui/NotFound.vue'
 
 
@@ -36,6 +37,14 @@ const routes = [
     path: '/dashboard', 
     name: 'todos', 
     component: Todos,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  { 
+    path: '/artwork', 
+    name: 'artworks', 
+    component: Artworks,
     meta: {
       requiresAuth: true
     }
