@@ -1,8 +1,35 @@
 <template>
     <div>
-        <AddArtwork />
+        <AddArtwork1 :publicId="publicId"/>
         <FilterArtworks />
         <h3>Artworks</h3>
+        1
+              <cld-image cloudName="defb2mzmx" :publicId="publicId" crop="scale" width="300" />
+2
+    <cld-context cloudName="defb2mzmx">
+      <cld-image :publicId="publicId">
+        <cld-transformation crop="scale" width="200" angle="10" />
+      </cld-image>
+    </cld-context>
+3
+    <cld-image cloudName="defb2mzmx" :publicId="publicId">
+    <cld-transformation angle="-45" />
+    <cld-transformation effect="trim" angle="45" crop="scale" width="600" />
+    <cld-transformation overlay="text:Arial_100:Hello" />
+    </cld-image>
+
+        
+        <button @click="openUploadModal">Upload files</button>
+        <cld-context cloudName="defb2mzmx">
+            <div style="display: flex; justify-content: center;">
+            <cld-image :publicId="publicId" width="250" crop="scale" />
+            <cld-image :publicId="publicId" width="300" crop="scale" />
+            <cld-image :publicId="publicId" width="350" crop="scale" />
+            <cld-image :publicId="publicId" width="400" crop="scale" />
+            <cld-image :publicId="publicId" width="450" crop="scale" />
+            </div>
+        </cld-context>
+        
         <div class="legend">
             <span>double click to mark complete</span>
             <span>
@@ -30,14 +57,23 @@
 
 <script>
 import FilterArtworks from '../Artworks/FilterArtworks'
-import AddArtwork from '../Artworks/AddArtwork'
+import AddArtwork1 from '../Artworks/AddArtwork1'
 import { mapGetters, mapActions } from 'vuex'
+import { CldContext, CldImage } from 'cloudinary-vue'
 export default {
     components: {
-        AddArtwork,
-        FilterArtworks
+        AddArtwork1,
+        FilterArtworks,
+        CldContext,
+        CldImage
     },
     name: 'Artworks',
+    data() {
+        return {
+            url: '',
+            publicId: ''
+        }
+    },
     methods: {
         ...mapActions([
             'fetchArtworks', 
@@ -45,6 +81,19 @@ export default {
             'deleteArtwork', 
             'updateArtwork'
         ]),
+        openUploadModal() {
+            window.cloudinary.openUploadWidget(
+                { cloud_name: 'defb2mzmx',
+                upload_preset: 'choosday'
+                },
+                (error, result) => {
+                if (!error && result && result.event === "success") {
+                    console.log('Done uploading..: ', result.info);
+                    this.url = result.info.url
+                    this.publicId = result.info.public_id
+                }
+            }).open()
+        },
         onDblClick(artwork) {
             const updArtwork = {
                 id: artwork.id,

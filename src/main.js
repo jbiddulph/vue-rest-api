@@ -17,8 +17,13 @@ import Events from './components/Admin/Events.vue'
 import Todos from './components/Todos/todos.vue'
 import Artworks from './components/Artworks/artworks.vue'
 import NotFound from './components/ui/NotFound.vue'
+import Cloudinary, { CldImage,CldTransformation,CldVideo,CldContext }  from 'cloudinary-vue';
 
 
+Vue.use(Cloudinary, {
+    configuration: { cloudName: 'defb2mzmx' },
+    components: [ CldImage,CldTransformation,CldVideo,CldContext ]
+})
 Vue.use(VueRouter)
 Vue.use(SuiVue);
 Vue.config.productionTip = false
