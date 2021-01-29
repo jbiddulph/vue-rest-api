@@ -50,6 +50,7 @@ const actions = {
                 'Authorization': 'Bearer ' + localStorage.getItem('access_token')
             }
         })
+        console.log('UPDATE LOG', response)
         commit('UPDATE_ARTWORK', response.data)
     }
 }

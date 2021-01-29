@@ -4,18 +4,14 @@
     <sui-modal v-model="open">
       <sui-modal-header>Add Artwork</sui-modal-header>
       <sui-modal-content scrolling image>
-        <sui-image
-          wrapped
-          size="medium"
-          src="static/images/avatar/large/rachel.png"
-        />
         <cld-context cloudName="defb2mzmx">
-            <cld-image :publicId="publicId">
-                <cld-transformation crop="scale" width="200" angle="10" />
-            </cld-image>
+            <div style="display: flex; justify-content: center;">
+                <cld-image :publicId="publicId" width="300" crop="scale" />
+            </div>
         </cld-context>
         <sui-modal-description>
-          <sui-header>Default Profile Image</sui-header>
+          <!-- <sui-header>Default Profile Image</sui-header> -->
+          <button class="large ui teal button" @click="openUploadModal">Upload your artwork</button>
           <sui-form @submit="onSubmit(artwork)">
             <sui-form-field>
                 <label>Title</label>
@@ -25,14 +21,12 @@
                 <label>Description</label>
                 <textarea v-model="artwork.description" placeholder="Add a short description..." rows="2"></textarea>
             </sui-form-field>
+            <sui-form-field>
+                <label>Image path</label>
+                <input v-model="artwork.primary_art" type="text" placeholder="Upload your artwork" disabled @click="openUploadModal" />
+            </sui-form-field>
             <sui-button type="submit" :disabled="!isValid" @click.prevent="onSubmit(artwork)">Submit</sui-button>
             </sui-form>
-            <!-- <form >
-              <input type="text" v-model="artwork.title" placeholder="Add Artwork...">
-              <input type="text" v-model="artwork.description" placeholder="enter something...">
-              
-              <button :disabled="!isValid" @click.prevent="onSubmit(artwork)">Add</button>
-          </form> -->
         </sui-modal-description>
       </sui-modal-content>
       <sui-modal-actions>
@@ -46,9 +40,14 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { CldContext, CldImage } from 'cloudinary-vue'
 export default {
   name: "AddArtworkModal",
-  props: ["userid", "publicId"],
+  props: ["userid"],
+  components: {
+    CldContext,
+    CldImage
+  },
   data() {
     return {
       open: false,
@@ -59,6 +58,8 @@ export default {
         created_by: 0,
         completed: 0,
       },
+      url: '',
+      publicId: ''
     };
   },
   methods: {
@@ -70,6 +71,22 @@ export default {
       this.created_by = this.getUser.id;
       console.log("ARTWORK: ", artwork);
       //this.addArtwork(artwork)
+    },
+    openUploadModal() {
+        window.cloudinary.openUploadWidget(
+            { cloud_name: 'defb2mzmx',
+            upload_preset: 'choosday'
+            },
+            (error, result) => {
+            if (!error && result && result.event === "success") {
+                console.log('Done uploading..: ', result.info);
+                this.url = result.info.url
+                this.publicId = result.info.public_id
+                this.artwork = {
+                    primary_art: this.url 
+                }
+            }
+        }).open()
     }
   },
   computed: {
