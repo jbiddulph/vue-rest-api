@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AddArtwork1 />
+    <AddArtwork />
     <FilterArtworks />
     <h3>Artworks</h3>
 
@@ -47,11 +47,11 @@
 
 <script>
 import FilterArtworks from "../Artworks/FilterArtworks";
-import AddArtwork1 from "../Artworks/AddArtwork1";
+import AddArtwork from "../Artworks/AddArtwork";
 import { mapGetters, mapActions } from "vuex";
 export default {
   components: {
-    AddArtwork1,
+    AddArtwork,
     FilterArtworks,
   },
   name: "Artworks",
@@ -128,7 +128,7 @@ i {
   position: absolute;
   bottom: 10px;
   right: 10px;
-  color: #ffffff;
+  color: #666666;
   cursor: pointer;
 }
 .todos {
